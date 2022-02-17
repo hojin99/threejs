@@ -27,6 +27,7 @@ class App {
     }
 
     _setupControls() {
+        // 마우스 컨트롤을 가능하게 해줌
         new OrbitControls(this._camera, this._divContainer);
     }
 
@@ -87,7 +88,7 @@ class App {
 
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute("position", new THREE.BufferAttribute(positions,3));
-        geometry.setAttribute("normal", new THREE.BufferAttribute(normals,3));
+        // geometry.setAttribute("normal", new THREE.BufferAttribute(normals,3));
         geometry.setAttribute("color", new THREE.BufferAttribute(colors,3));
         geometry.setAttribute("uv", new THREE.BufferAttribute(uvs,2));
 
@@ -96,7 +97,9 @@ class App {
             0,1,2,
             2,1,3
         ]);
-        // geometry.computeVertexNormals();
+        
+        // 자동으로 normals를 계산
+        geometry.computeVertexNormals();
 
         // const textureLoader = new THREE.TextureLoader();
         // const map = textureLoader.load('../node_modules/three/examples/textures/uv_grid_opengl.jpg');
@@ -111,6 +114,7 @@ class App {
         this._scene.add(cube);
         this._cube = cube;
 
+        // VertexNormalsHelper - vertex normal을 표시해 주는 helper
         const helper = new VertexNormalsHelper(cube, 0.1, 0xffff00);
         this._scene.add(helper);
     }
@@ -128,16 +132,8 @@ class App {
     render(time) {
         // console.log(`[render] time - ${time}`);
         this._renderer.render(this._scene, this._camera);
-        this.update(time);
 
         requestAnimationFrame(this.render.bind(this));
-    }
-
-    update(time) {
-        // console.log(`[update] time - ${time}`);
-        time *= 0.001;
-        // this._cube.rotation.x = time;
-        // this._cube.rotation.y = time;
     }
 
 }

@@ -48,13 +48,28 @@ class App {
     }
 
     _setupModel() {
+        // BoxGeometry - box 모양의 geometry
         const geometry = new THREE.BoxGeometry(1,1,1); //가로,세로,깊이
+        // MeshPhongMaterial - 광원에 반응하는 material
         const material = new THREE.MeshPhongMaterial({color: 0x44a88});
 
         const cube = new THREE.Mesh(geometry, material);
+        cube.position.set(1,0,0);
 
         this._scene.add(cube);
         this._cube = cube;
+
+        // EdgesGeometry - geometry의 edge만 추출해 주는 helper
+        const edges = new THREE.EdgesGeometry(geometry);
+        const edgesMaterial = new THREE.LineBasicMaterial({
+          color: 0xff0000
+        });
+        // LineSegments - vetices 간의 Lines
+        const edgesMesh = new THREE.LineSegments(edges, edgesMaterial);
+        edgesMesh.position.set(-1, 0, 0);
+        this._scene.add(edgesMesh);
+        this._edge = edgesMesh;
+
     }
 
     resize() {
@@ -80,6 +95,9 @@ class App {
         time *= 0.001;
         this._cube.rotation.x = time;
         this._cube.rotation.y = time;
+
+        this._edge.rotation.x = time;
+        this._edge.rotation.y = time;
     }
 
 }
