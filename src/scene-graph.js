@@ -34,7 +34,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 2;
+        camera.position.z = 30;
         this._camera = camera;
     }
 
@@ -48,15 +48,48 @@ class App {
     }
 
     _setupModel() {
-        // BoxGeometry - box 모양의 geometry
-        const geometry = new THREE.BoxGeometry(1,1,1); //가로,세로,깊이
-        // MeshPhongMaterial - 광원에 반응하는 material
-        const material = new THREE.MeshPhongMaterial({color: 0x44a88});
+        const solarSystem = new THREE.Object3D();
+        this._scene.add(solarSystem);
 
-        const cube = new THREE.Mesh(geometry, material);
+        const radius =1;
+        const widthSegments = 12;
+        const heightSegments =12;
+        const sphereGeometry = new THREE.SphereGeometry(radius, widthSegments, heightSegments);
 
-        this._scene.add(cube);
-        this._cube = cube;
+        const sunMaterial = new THREE.MeshPhongMaterial({
+            emissive: 0xffff00, flatShading:true
+        });
+
+        const sunMesh = new THREE.Mesh(sphereGeometry, sunMaterial);
+        sunMesh.scale.set(3,3,3);
+        solarSystem.add(sunMesh);
+
+        const earthOrbit = new THREE.Object3D();
+        solarSystem.add(earthOrbit);
+
+        const earthMaterial = new THREE.MeshPhongMaterial({
+            color:0x2233ff, emissive: 0x112244, flatShading:true
+        });
+
+        const earthMesh = new THREE.Mesh(sphereGeometry, earthMaterial);
+        earthOrbit.position.x = 10;
+        earthOrbit.add(earthMesh);
+
+        const moonOrbit = new THREE.Object3D();
+        moonOrbit.position.x =2;
+        earthOrbit.add(moonOrbit);
+
+        const moonMaterial = new THREE.MeshPhongMaterial({
+            color:0x888888, emissive: 0x222222, flatShading:true
+        });
+    
+        const moonMesh = new THREE.Mesh(sphereGeometry, moonMaterial);
+        moonMesh.scale.set(0.5,0.5,0.5);
+        moonOrbit.add(moonMesh);
+
+        this._solarSystem = solarSystem;
+        this._earthOrbit = earthOrbit;
+        this._moonOrbit = moonOrbit;
     }
 
     resize() {
@@ -78,8 +111,9 @@ class App {
 
     update(time) {
         time *= 0.001;
-        this._cube.rotation.x = time;
-        this._cube.rotation.y = time;
+        this._solarSystem.rotation.y = time / 2;
+        this._earthOrbit.rotation.y = time * 2;
+        this._moonOrbit.rotation.y = time * 3;
 
     }
 }

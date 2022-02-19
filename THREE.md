@@ -7,3 +7,4 @@ getMaxAnisotropy() - 이방성이라고 함(값이 크면 선명하게 보이지
 setPixelRatio() - 해상도를 높이기 위해서 pixel내에 sub pixel의 비율, window.devicePixelRatio로 설정
 
 setSize() - 
+

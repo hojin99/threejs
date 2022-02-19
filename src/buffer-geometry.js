@@ -129,8 +129,7 @@ class App {
         this._renderer.setSize(width, height);
     }
 
-    render(time) {
-        // console.log(`[render] time - ${time}`);
+    render() {
         this._renderer.render(this._scene, this._camera);
 
         requestAnimationFrame(this.render.bind(this));
