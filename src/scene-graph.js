@@ -111,9 +111,9 @@ class App {
 
     update(time) {
         time *= 0.001;
-        this._solarSystem.rotation.y = time / 2;
-        this._earthOrbit.rotation.y = time * 2;
-        this._moonOrbit.rotation.y = time * 3;
+        this._solarSystem.rotation.y = time/2;
+        this._earthOrbit.rotation.y = time;
+        // this._moonOrbit.rotation.y = time * 3;
 
     }
 }
