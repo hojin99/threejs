@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/hojin99/threejs#readme",
   "dependencies": {
+    "papaparse": "^5.3.2",
     "three": "^0.137.5"
   }
 }
