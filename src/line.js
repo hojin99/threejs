@@ -50,7 +50,7 @@ class App {
         function onError() {}
 
         function loadModel() {
-            object.scale.set(0.005,0.005,0.005)
+            object.scale.set(0.0005,0.0005,0.0004)
             that._scene.add( object );
         }
 
@@ -87,7 +87,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 3;
+        camera.position.z = 2;
         this._camera = camera;
     }
 
@@ -154,9 +154,9 @@ class App {
 
                     vertices.push( y,z,x );
         
-                    colors.push( ( y / r ) + 0.5 );
-                    colors.push( ( z / r ) + 0.5 );
-                    colors.push( ( x / r ) + 0.5 );
+                    colors.push( z * 1.9  );
+                    colors.push( 0.1 );
+                    colors.push( 0 );
                 }
        
                 const meshMaterial = new THREE.LineBasicMaterial( { 
@@ -211,6 +211,21 @@ class App {
         this._scene.add(mesh);
     }
 
+        _addMesh(geometry, material, lineMaterial, x, y, z) {
+
+        const mesh = new THREE.Mesh(geometry, material);
+
+        const group = new THREE.Group();
+        group.add(mesh);
+        if(lineMaterial) {
+            const line = new THREE.LineSegments(new THREE.WireframeGeometry(geometry), lineMaterial);
+            group.add(line);
+        }
+        group.position.set(x,y,z);
+
+        this._meshs.push(group);
+        this._scene.add(group);
+    }
 
     render(time) {
         // console.log(`[render]`);

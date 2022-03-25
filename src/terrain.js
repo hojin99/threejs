@@ -1,18 +1,18 @@
 import * as THREE from 'three';
 import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
-import * as BufferGeometryUtils from '../node_modules/three/examples/jsm/utils/BufferGeometryUtils.js';
-import { ConvexGeometry } from '../node_modules/three/examples/jsm/geometries/ConvexGeometry.js';
+import { OBJLoader } from '../node_modules/three/examples/jsm/loaders/OBJLoader.js';
 
 class App {
     constructor() {
         const divContainer = document.querySelector("#webgl-container");
         this._divContainer = divContainer;
 
-        const rederer = new THREE.WebGLRenderer({ antialias: true});
+        const renderer = new THREE.WebGLRenderer({ antialias: true});
         // HD-DPI(고해상도) 디스플레이 처리 - 한픽셀을 선명하게 하기 위해 다수의 작은 픽셀을 넣는 것
-        rederer.setPixelRatio(window.devicePixelRatio);
-        divContainer.appendChild(rederer.domElement);
-        this._renderer = rederer;
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        divContainer.appendChild(renderer.domElement);
+        this._renderer = renderer;
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color( 0xf0f0f0 );
@@ -23,12 +23,44 @@ class App {
         this._setupLight();
         this._setupModel();
         this._setupControls();   
-        this._setupGrid();     
+        this._setupGrid();   
+        // this._loadObj();  
 
         window.onresize = this.resize.bind(this);
         this.resize();
 
         requestAnimationFrame(this.render.bind(this));
+    }
+
+    _loadObj() {
+
+        let object;
+        let that = this;
+
+        function onProgress( xhr ) {
+
+            if ( xhr.lengthComputable ) {
+
+                const percentComplete = xhr.loaded / xhr.total * 100;
+                console.log( 'model ' + Math.round( percentComplete, 2 ) + '% downloaded' );
+
+            }
+        }
+
+        function onError() {}
+
+        function loadModel() {
+            object.scale.set(0.0005,0.0005,0.0004)
+            that._scene.add( object );
+        }
+
+        const manager = new THREE.LoadingManager( loadModel );
+
+        const loader = new OBJLoader( manager );
+        loader.load( 'model/anntena.obj', function ( obj ) {
+            object = obj;
+        }, onProgress, onError );
+
     }
 
     _setupGrid() {
@@ -55,7 +87,7 @@ class App {
             0.1,
             100
         );
-        camera.position.z = 30;
+        camera.position.z = 2;
         this._camera = camera;
     }
 
@@ -69,55 +101,25 @@ class App {
 
     _setupModel() {
 
-        const vertices = [];
-        let x = [ 5.59834667e+00,  4.62756317e+00, -2.06661675e-16, -6.20643384e+00,
-            -4.43334079e+00, -6.65235702e+00, -4.73873404e-16,  8.63816420e-02,
-             1.99321656e+00, 6.57566386e+00, 1.28544692e+00, -1.34562637e-16, -9.21026629e-01,
-            -2.22843308e+00, -4.96136260e+00, -2.88479371e-16,  5.33557648e-01,
-             4.84337044e+00, -0.00000000e+00, -0.00000000e+00,  0.00000000e+00,  0.00000000e+00,
-             0.00000000e+00,  0.00000000e+00,  0.00000000e+00, -0.00000000e+00,
-            -0.00000000e+00, -6.33622537e+00, -7.82590522e-01,  2.63981755e-17,  2.79472741e-01,
-             5.90282430e+00,  2.20408198e+00,  3.64150368e-16, -2.27347098e-01,
-            -6.97094393e-01, -6.20862360e+00, -3.55556584e+00,  1.28874290e-16,  7.71355533e-01,
-             8.54070254e+00,  4.09856659e+00,  5.21620468e-16, -5.64702487e+00,
-            -6.56135148e+00];
-          let y = [ 6.85599732e-16,  4.62756317e+00,  3.37504129e+00,  6.20643384e+00,
-            -0.00000000e+00, -6.65235702e+00, -7.73893998e+00, -8.63816420e-02,
-            -2.44098628e-16, 8.05286570e-16,  1.28544692e+00,  2.19757464e+00,  9.21026629e-01,
-            -0.00000000e+00, -4.96136260e+00, -4.71122566e+00, -5.33557648e-01,
-            -5.93141811e-16, -0.00000000e+00, -0.00000000e+00, -0.00000000e+00, -0.00000000e+00,
-             0.00000000e+00, 0.00000000e+00,  0.00000000e+00,  0.00000000e+00, 0.00000000e+00,
-           -7.75963811e-16, -7.82590522e-01, -4.31114922e-01, -2.79472741e-01,
-             0.00000000e+00,  2.20408198e+00,  5.94702682e+00,  2.27347098e-01,
-             8.53694417e-17, -7.60337102e-16, -3.55556584e+00, -2.10467688e+00, -7.71355533e-01,
-             0.00000000e+00, 4.09856659e+00, 8.51870871e+00,  5.64702487e+00,  8.03533809e-16];
-          let z = [3.42799866e-16, 4.00726635e-16, 2.06661675e-16, 5.37449897e-16,
-            2.71463830e-16, 5.76064885e-16, 4.73873404e-16, 7.48027060e-18,
-            1.22049314e-16, 6.57566386e+00, 1.81789647e+00, 2.19757464e+00, 1.30252835e+00,
-            2.22843308e+00, 7.01642628e+00, 4.71122566e+00, 7.54564462e-01,
-            4.84337044e+00, 9.97821509e+00, 5.34772990e+00, 2.07624978e+00, 8.42027350e+00,
-            2.05370163e+00, 4.22550836e+00, 4.03830571e-01, 8.35613024e-01, 1.22142887e+00,
-           6.33622537e+00, 1.10675013e+00, 4.31114922e-01, 3.95234140e-01,
-            5.90282430e+00, 3.11704263e+00, 5.94702682e+00, 3.21517350e-01,
-            6.97094393e-01, 3.80168551e-16, 3.07896378e-16, 1.28874290e-16, 6.67959995e-17,
-            5.22967201e-16, 3.54917856e-16, 5.21620468e-16, 4.89007539e-16, 4.01766904e-16];
+        const material = new THREE.MeshPhongMaterial({color: 0x515151});
+        const lineMaterial = new THREE.LineBasicMaterial({color: 0xffff00});
+        const geometry = new THREE.PlaneGeometry(1,1,100,100); 
 
-        for ( let i = 0; i < x.length; i ++ ) {            
-            const vertex = new THREE.Vector3(x[i],y[i],z[i]);
-            vertices.push( vertex );
+        // 초기 배치가 Z가 위가 아니라 앞 쪽이어서 위가 되도록 돌려줌
+        geometry.rotateX( - Math.PI / 2 );
+
+        // vertex를 배열로 
+        const points = geometry.attributes.position.array;
+        console.log(points.length);
+
+        for ( let i = 0, l = points.length; i < l; i ++) {
+
+            // vertex 중 높이만 랜덤으로 높여줌
+            if(i%3===1)
+                points[ i ] = Math.random() * 0.1;
         }
 
-        console.log(vertices);
-
-        const meshMaterial = new THREE.MeshLambertMaterial( {
-            color: 0xffff00,
-            opacity: 0.8,
-            transparent: true
-        } );
-
-        const meshGeometry = new ConvexGeometry( vertices );
-
-        this._addMesh(meshGeometry, meshMaterial, null, -4,2,0);
+        this._addMesh(geometry, material, lineMaterial, 0,0,0);
 
     }
 
