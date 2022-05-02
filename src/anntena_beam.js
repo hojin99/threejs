@@ -126,27 +126,27 @@ class App {
                     colors.push( y );
                     colors.push( x );
 
-                    // sizes[i] = 0.1;
+                    sizes[i] = 0.1;
                 }
        
-				// const material = new THREE.ShaderMaterial( {
+				const material = new THREE.ShaderMaterial( {
 
-				// 	uniforms: {
-				// 		color: { value: new THREE.Color( 0xffffff ) },
-				// 		pointTexture: { value: new THREE.TextureLoader().load( 'textures/disc.png' ) },
-				// 		alphaTest: { value: 0.7 }
-				// 	},
-				// 	vertexShader: document.getElementById( 'vertexshader' ).textContent,
-				// 	fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+					uniforms: {
+						color: { value: new THREE.Color( 0xffffff ) },
+						pointTexture: { value: new THREE.TextureLoader().load( 'textures/disc.png' ) },
+						alphaTest: { value: 0.8 }
+					},
+					vertexShader: document.getElementById( 'vertexshader' ).textContent,
+					fragmentShader: document.getElementById( 'fragmentshader' ).textContent
 
-				// } );
+				} );
 
-                const material = new THREE.PointsMaterial( { size: 0.1, vertexColors: true } );
+                // const material = new THREE.PointsMaterial( { size: 0.03, vertexColors: true } );
         
                 const meshGeometry = new THREE.BufferGeometry();
                 meshGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-				// meshGeometry.setAttribute( 'customColor', new THREE.Float32BufferAttribute( colors, 3 ) );
-                meshGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+				meshGeometry.setAttribute( 'customColor', new THREE.Float32BufferAttribute( colors, 3 ) );
+                // meshGeometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
 				meshGeometry.setAttribute( 'size', new THREE.Float32BufferAttribute( sizes, 1 ) );
                 // 초기 배치가 Z가 위가 아니라 앞 쪽이어서 위가 되도록 돌려줌
                 meshGeometry.rotateX( - Math.PI / 2 );
